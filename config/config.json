@@ -1,0 +1,33 @@
+{
+  "dataloader": {
+    "elasticsearch": {
+      "cluster_url": "https://54b4996b355c46e8b407b77e44875a98.eu-central-1.aws.cloud.es.io:9243/",
+      "user_ingest": "test",
+      "user_ingest_pwd": "test1234"
+    },
+    "plugin": [
+      {
+        "api": "nyt_articlesearch",
+        "key": "9194b40ad1574f42993aba8ff8637f7e",
+        "url": "https://api.nytimes.com/svc/search/v2/articlesearch",
+        "response_format": "json",
+        "module": "plugin_nyt_articlesearch",
+        "module_class": "NYTimesSource",
+        "index_prefix": "news_",
+        "index_default_suffix": "1900-01-01",
+        "index_suffix_field": "date_publication",
+        "publication_default": "New York Times",
+        "date_publication_default": "1900-01-01",
+        "fieldmap": {
+            "id": "_id",
+            "publication": "source",
+            "body": "snippet",
+            "dataset": "",
+            "title": "headline.main",
+            "date_publication": "pub_date",
+            "author": "byline.original"
+        }
+      }
+    ]
+  }
+}
