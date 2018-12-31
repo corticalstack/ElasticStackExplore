@@ -1,0 +1,79 @@
+POST _template/news_template
+{
+	"index_patterns": ["news_*"],
+	"settings": {
+		"index": {
+		  "analysis": {
+		    "analyzer": {
+		      "custom_analyzer": {
+		        "type": "custom",
+		        "tokenizer": "standard",
+		        "filter": [
+		          "lowercase",
+		          "custom_edge_ngram"
+		        ]
+		      }
+		    },
+		  "filter": {
+		    "custom_edge_ngram": {
+		      "type": "edge_ngram",
+		      "min_gram": 2,
+		      "max_gram": 10
+		    }
+		  }
+		  }
+		}
+	},
+	"mappings": {
+		"doc": {
+			"properties": {
+				"publication": {
+					"type": "keyword",
+					"fields": {
+						"search": {
+							"type": "text",
+					    "analyzer": "custom_analyzer",
+					    "search_analyzer": "standard"
+						}
+					}
+				},
+				"body": {
+					"type": "text",
+					"analyzer": "custom_analyzer",
+					"search_analyzer": "standard"
+				},
+				"dataset": {
+					"type": "keyword",
+					"fields": {
+						"search": {
+							"type": "text"
+						}
+					}
+				},
+				"title": {
+					"type": "keyword",
+					"fields": {
+						"search": {
+							"type": "text",
+							"analyzer": "custom_analyzer",
+					    "search_analyzer": "standard"
+						}
+					}
+				},
+				"date_publication": {
+					"type": "date"
+				},
+				"author": {
+					"type": "keyword",
+					"fields": {
+						"search": {
+							"type": "text",
+							"analyzer": "custom_analyzer",
+					    "search_analyzer": "standard"
+					  }
+				  }
+				}
+			}
+		}
+	}
+}

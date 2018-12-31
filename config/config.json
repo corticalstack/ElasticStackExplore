@@ -8,7 +8,8 @@
     "plugin": [
       {
         "api": "nyt_articlesearch",
-        "key": "9194b40ad1574f42993aba8ff8637f7e",
+        "enabled": true,
+        "api_key": "9194b40ad1574f42993aba8ff8637f7e",
         "url": "https://api.nytimes.com/svc/search/v2/articlesearch",
         "response_format": "json",
         "module": "plugin_nyt_articlesearch",
@@ -26,7 +27,32 @@
             "title": "headline.main",
             "date_publication": "pub_date",
             "author": "byline.original"
-        }
+        },
+        "query": ["Silicon Valley", "Silicon Glen", "augmented intelligence"]
+      },
+       {
+        "api": "newsapiorg_everything",
+        "enabled": true,
+        "api_key": "733af9f2b1cb4a9e97039675efeaecc0",
+        "url": "https://newsapi.org/v2/everything",
+        "response_format": "json",
+        "module": "plugin_newsapiorg_everything",
+        "module_class": "NewsApiEverything",
+        "index_prefix": "news_",
+        "index_default_suffix": "1900-01-01",
+        "index_suffix_field": "date_publication",
+        "publication_default": "News API.org",
+        "date_publication_default": "1900-01-01",
+        "fieldmap": {
+            "id": "",
+            "publication": "source.name",
+            "body": "content",
+            "dataset": "",
+            "title": "title",
+            "date_publication": "publishedAt",
+            "author": "author"
+        },
+        "query": ["Silicon Valley", "Silicon Glen", "augmented intelligence"]
       }
     ]
   }

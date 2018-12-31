@@ -1,26 +1,25 @@
 # Author:   Jon-Paul Boyd
 # Date:     05/12/2018
-import argparse
 import logging
 import requests
 
 log = logging.getLogger(__name__)
 
 
-class NYTimesSource(object):
+class NYTimesSource:
     """
-    A data loader plugin for the NY Times API.
+    A data loader plugin for the New York Times Article Search API.
     """
 
-    def __init__(self):
+    def __init__(self, url, api_key):
         self.sep = '.'
         self.page = 0
-        self.pagelimit = 10  # Page limit supports testing
+        self.pagelimit = 1  # Page limit supports testing
         self.numpages = 0
         self.statusOK = 'OK'
-        self.url = 'https://api.nytimes.com/svc/search/v2/articlesearch'
-        self.api_key = '9194b40ad1574f42993aba8ff8637f7e'
-        self.query = 'Silicon Valley'
+        self.url = url
+        self.api_key = api_key
+        self.query = None
         self.response_format = '.json'
 
     def connect(self, inc_column=None, max_inc_value=None):
@@ -116,7 +115,7 @@ class NYTimesSource(object):
         """
 
         #JP - Schema hardcoded from flattened dictionary manually referencing first returned result
-        #Could easily employ flatten_dict to dynamically generate dictionary
+        #Could easily employ flatten_dict to dynamically generate schema
         schema = [
             'web_url',
             'snippet',
@@ -139,24 +138,5 @@ class NYTimesSource(object):
         ]
 
         return schema
-
-
-if __name__ == '__main__':
-    config = {
-        'url': 'https://api.nytimes.com/svc/search/v2/articlesearch',
-        'api_key': '9194b40ad1574f42993aba8ff8637f7e',
-        'query': 'Silicon Valley',
-        'response_format': '.json'
-    }
-    source = NYTimesSource()
-
-    # This looks like an argparse dependency - but the Namespace class is just
-    # a simple way to create an object holding attributes.
-    source.args = argparse.Namespace(**config)
-
-    for idx, batch in enumerate(source.getDataBatch(3)): # Set to 3 testing batch & yield as API page limit 10 articles
-        print('{1} Batch of {0} items'.format(len(batch), idx))
-        for item in batch:
-            print('  - {0} - {1}'.format(item['_id'], item['headline.main']))
 
 

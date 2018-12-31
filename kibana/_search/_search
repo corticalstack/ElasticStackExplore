@@ -1,0 +1,65 @@
+get news*/_search
+
+GET /news*/_search
+{
+    "query": {
+      "term": {
+        "publication": "New York Times"
+      }
+    }
+}
+
+GET /news*/_search
+{
+    "query": {
+      "term": {
+        "publication": "New York"
+      }
+    }
+}
+
+GET /news*/_search
+{
+    "query": {
+      "match": {
+        "publication": "New York"
+      }
+    }
+}
+
+GET /news*/_search
+{
+    "query": {
+      "match": {
+        "content": "deliver"
+      }
+    }
+}
+
+GET /news*/_search
+{
+    "query": {
+      "match": {
+        "author.search": "san"
+      }
+    }
+}
+
+GET /news*/_search
+{
+    "query": {
+      "match": {
+        "title.search": "Angels"
+      }
+    }
+}
+
+GET /news*/_search
+{
+    "query": {
+      "match": {
+        "publication.search": "nw"
+      }
+    }
+}
+

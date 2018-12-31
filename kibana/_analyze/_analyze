@@ -1,0 +1,6 @@
+get news_2016-12-31/_analyze
+{
+  "text": "New York Times",
+  "analyzer": "custom_analyzer"
+}
+
