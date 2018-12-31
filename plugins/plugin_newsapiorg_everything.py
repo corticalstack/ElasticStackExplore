@@ -1,5 +1,4 @@
 # Author:   Jon-Paul Boyd
-# Date:     05/12/2018
 import logging
 import requests
 
