@@ -2,8 +2,8 @@
   "dataloader": {
     "elasticsearch": {
       "cluster_url": "https://ab93385654d74a0da876074a41d0c243.eu-central-1.aws.cloud.es.io:9243/",
-      "user_ingest": "ingest",
-      "user_ingest_pwd": "ingest1234"
+      "user_ingest": "******",
+      "user_ingest_pwd": "******"
     },
     "plugin": [
       {
