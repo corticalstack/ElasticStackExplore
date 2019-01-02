@@ -1,65 +1,127 @@
-get news*/_search
+GET news*/_search
 
-GET /news*/_search
+GET news*/_search
 {
-    "query": {
-      "term": {
-        "publication": "New York Times"
+  "query": {
+    "range": {
+      "date_publication": {
+        "gte": "2017-03-01",
+        "lte": "2017-03-02"
       }
     }
+  }
 }
 
-GET /news*/_search
+GET news*/_search
 {
-    "query": {
-      "term": {
-        "publication": "New York"
+  "query": {
+    "term": {
+      "author": "Jerome Hudson"
+    }
+  }
+}
+
+GET news*/_search
+{
+  "query": {
+    "constant_score": {
+      "filter": {
+        "term": {
+          "author": "Jerome Hudson"
+        }
       }
     }
+  }
 }
 
-GET /news*/_search
+GET news*/_search
 {
-    "query": {
-      "match": {
-        "publication": "New York"
+  "query": {
+    "match": {
+      "author.search": "Jer"
+    }
+  }
+}
+
+GET news*/_search
+{
+  "query": {
+    "match": {
+      "author": {
+        "query": "Guy Tazz",
+        "fuzziness": 2
       }
     }
+  }
 }
 
-GET /news*/_search
+GET news*/_search
 {
-    "query": {
-      "match": {
-        "content": "deliver"
+  "query": {
+    "match_phrase": {
+      "body": {
+        "query": "Smells Like Teen Spirit"
       }
     }
+  }
 }
 
-GET /news*/_search
+GET news*/_search
+{
+  "query": {
+    "multi_match": {
+      "query": "augmented intelligence",
+      "fields": ["title", "body"]
+    }
+  }
+}
+
+GET news*/_search
 {
     "query": {
-      "match": {
-        "author.search": "san"
-      }
+      "constant_score": {
+        "filter": {
+          "bool": {
+            "must": [
+              {
+                "range": {
+                  "date_publication": {
+                    "gte": "2015-01-01",
+                    "lte": "2018-12-31"
+                  }
+                }
+              },
+              {
+                "match_phrase": {
+                  "body": "machine learning"
+                }
+              }
+            ],
+            "should": [
+              {
+                "term": {
+                  "title.search": {
+                    "value": "artificial"
+                  }
+                }
+              },
+              {
+                "term": {
+                  "title.search": {
+                    "value": "augmented"
+                  }
+                }
+              },
+               {
+                "term": {
+                  "body": {
+                    "value": "singularity"
+                  }
+                }
+              }
+            ]
+          }
+        }
     }
+  }
 }
-
-GET /news*/_search
-{
-    "query": {
-      "match": {
-        "title.search": "Angels"
-      }
-    }
-}
-
-GET /news*/_search
-{
-    "query": {
-      "match": {
-        "publication.search": "nw"
-      }
-    }
-}
-

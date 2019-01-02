@@ -32,7 +32,7 @@ class PluginModuleClassNotFoundError(Exception):
 
 class DataLoader:
     """
-    This class is used to scare API sourced data and ingest into Elasticsearch
+    This class is used to scrape API sourced data and ingest into Elasticsearch
     """
     def __init__(self):
         """
