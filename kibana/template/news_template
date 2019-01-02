@@ -63,6 +63,12 @@ POST _template/news_template
 				"date_publication": {
 					"type": "date"
 				},
+				"year": {
+					"type": "keyword"
+				},
+				"yearmonth": {
+					"type": "keyword"
+				},
 				"author": {
 					"type": "keyword",
 					"fields": {

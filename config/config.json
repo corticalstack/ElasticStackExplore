@@ -1,9 +1,9 @@
 {
   "dataloader": {
     "elasticsearch": {
-      "cluster_url": "https://54b4996b355c46e8b407b77e44875a98.eu-central-1.aws.cloud.es.io:9243/",
-      "user_ingest": "test",
-      "user_ingest_pwd": "test1234"
+      "cluster_url": "https://ab93385654d74a0da876074a41d0c243.eu-central-1.aws.cloud.es.io:9243/",
+      "user_ingest": "ingest",
+      "user_ingest_pwd": "ingest1234"
     },
     "plugin": [
       {
@@ -15,10 +15,12 @@
         "module": "plugin_nyt_articlesearch",
         "module_class": "NYTimesSource",
         "index_prefix": "news_",
-        "index_default_suffix": "1900-01-01",
-        "index_suffix_field": "date_publication",
+        "index_default_suffix": "1900",
+        "index_suffix_field": "year",
         "publication_default": "New York Times",
         "date_publication_default": "1900-01-01",
+        "year_default": "1900",
+        "yearmonth_default": "190001",
         "fieldmap": {
             "id": "_id",
             "publication": "source",
@@ -26,9 +28,11 @@
             "dataset": "",
             "title": "headline.main",
             "date_publication": "pub_date",
+            "year": "year",
+            "yearmonth": "yearmonth",
             "author": "byline.original"
         },
-        "query": ["Silicon Valley", "Silicon Glen", "augmented intelligence"]
+        "query": ["Silicon Valley"]
       },
        {
         "api": "newsapiorg_everything",
@@ -39,10 +43,12 @@
         "module": "plugin_newsapiorg_everything",
         "module_class": "NewsApiEverything",
         "index_prefix": "news_",
-        "index_default_suffix": "1900-01-01",
-        "index_suffix_field": "date_publication",
+        "index_default_suffix": "1900",
+        "index_suffix_field": "year",
         "publication_default": "News API.org",
         "date_publication_default": "1900-01-01",
+        "year_default": "1900",
+        "yearmonth_default": "190001",
         "fieldmap": {
             "id": "",
             "publication": "source.name",
@@ -50,9 +56,11 @@
             "dataset": "",
             "title": "title",
             "date_publication": "publishedAt",
+            "year": "year",
+            "yearmonth": "yearmonth",
             "author": "author"
         },
-        "query": ["Silicon Valley", "Silicon Glen", "augmented intelligence"]
+        "query": ["Universal Basic Income", "augmented intelligence", "economic singularity"]
       }
     ]
   }

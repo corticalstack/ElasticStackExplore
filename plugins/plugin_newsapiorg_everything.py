@@ -1,6 +1,7 @@
 # Author:   Jon-Paul Boyd
 import logging
 import requests
+import math
 
 log = logging.getLogger(__name__)
 
@@ -12,7 +13,9 @@ class NewsApiEverything:
 
     def __init__(self, url, api_key):
         self.sep = '.'
-        self.page = 0
+        self.pagesize = 100
+        self.pagelimit = 100  # Page limit supports testing
+        self.numpages = 0
         self.statusOK = 'ok'
         self.url = url
         self.api_key = api_key
@@ -50,41 +53,61 @@ class NewsApiEverything:
         return result
 
     def getUrl(self):
-        return '{0}?q={1}&apiKey={2}'.format(
-            self.url, self.query, self.api_key
+        return '{0}?q={1}&apiKey={2}&pageSize={3}&page={4}'.format(
+            self.url, self.query, self.api_key, self.pagesize, self.page
         )
 
-    def getDataBatch(self, batch_size):
-        results = []
-
+    def setNumPages(self):
         url = self.getUrl()
         response = requests.get(url)
         docs = response.json()
-
         try:
-            status = docs['status']
+            hits = docs['totalResults']
         except KeyError:
             return
 
-        if status != self.statusOK:
-            return
+        self.numpages = math.ceil(hits / 10)
+        if self.numpages > self.pagelimit:
+            self.numpages = self.pagelimit
 
-        try:
-            articles = docs['articles']
-        except KeyError:
-            return
+    def getDataBatch(self, batch_size):
+        results = []
+        self.page = 1
+        self.setNumPages()
 
-        for article in articles:
-            result = self.flatten_dict(article)
-            if 'publishedAt' in result:
-                result['publishedAt'] =  result['publishedAt'][0:10]
-            results.append(result)
-            if len(results) >= batch_size:
+        while self.page <= self.numpages:
+            url = self.getUrl()
+            response = requests.get(url)
+            docs = response.json()
+
+            try:
+                status = docs['status']
+            except KeyError:
+                return
+
+            if status != self.statusOK:
+                return
+
+            try:
+                articles = docs['articles']
+            except KeyError:
+                return
+
+            for article in articles:
+                result = self.flatten_dict(article)
+                if 'publishedAt' in result:
+                    result['publishedAt'] =  result['publishedAt'][0:10]
+                    result['year'] = result['publishedAt'][0:4]
+                    result['yearmonth'] = result['publishedAt'][0:4] + result['publishedAt'][5:7]
+                results.append(result)
+                if len(results) >= batch_size:
+                    yield results
+                    results = []
+
+            if results:
                 yield results
-                results = []
 
-        if results:
-            yield results
+            self.page += 1
 
     def getSchema(self):
         """
@@ -102,6 +125,8 @@ class NewsApiEverything:
             'title',
             'description',
             'publishedAt',
+            'year',
+            'yearmonth',
             'content'
         ]
 

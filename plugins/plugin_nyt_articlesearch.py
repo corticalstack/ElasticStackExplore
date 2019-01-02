@@ -1,6 +1,8 @@
 # Author:   Jon-Paul Boyd
 import logging
 import requests
+import math
+import time
 
 log = logging.getLogger(__name__)
 
@@ -13,7 +15,7 @@ class NYTimesSource:
     def __init__(self, url, api_key):
         self.sep = '.'
         self.page = 0
-        self.pagelimit = 1  # Page limit supports testing
+        self.pagelimit = 100  # Page limit supports testing
         self.numpages = 0
         self.statusOK = 'OK'
         self.url = url
@@ -65,15 +67,17 @@ class NYTimesSource:
         except KeyError:
             return
 
-        self.numpages = (hits / 10) - 1
+        self.numpages = math.ceil(hits / 10)
         if self.numpages > self.pagelimit:
             self.numpages = self.pagelimit
 
     def getDataBatch(self, batch_size):
         results = []
+        self.page = 0
         self.setNumPages()
 
         while self.page < self.numpages:
+            time.sleep(1)  # API limited to 1 call per second - see https://developer.nytimes.com/faq#12
             url = self.getUrl()
             response = requests.get(url)
             docs = response.json()
@@ -94,7 +98,9 @@ class NYTimesSource:
             for article in articles:
                 result = self.flatten_dict(article)
                 if 'pub_date' in result:
-                    result['pub_date'] =  result['pub_date'][0:10]
+                    result['pub_date'] = result['pub_date'][0:10]
+                    result['year'] = result['pub_date'][0:4]
+                    result['yearmonth'] = result['pub_date'][0:4] + result['pub_date'][5:7]
                 results.append(result)
                 if len(results) >= batch_size:
                     yield results
@@ -104,6 +110,7 @@ class NYTimesSource:
                 yield results
 
             self.page += 1
+
 
 
     def getSchema(self):
@@ -128,6 +135,8 @@ class NYTimesSource:
             'headline.sub',
             'keywords',
             'pub_date',
+            'year',
+            'yearmonth',
             'byline.original',
             'document_type',
             'type_of_material',

@@ -149,6 +149,12 @@ class DataLoader:
         if 'date_publication' not in event:
             event['date_publication'] = plugin['date_publication_default']
 
+        if 'year' not in event:
+            event['year'] = plugin['year_default']
+
+        if 'yearmonth' not in event:
+            event['yearmonth'] = plugin['yearmonth_default']
+
         # Use source id if available, else let ES determine index id
         if 'id' in event:
             self.es.index(index=index, doc_type='doc', id=event['id'], body=event)
@@ -172,7 +178,7 @@ class DataLoader:
                     for q in p['query']:  # Loop plugin query list
                         event_count = 0
                         p_class.query = q
-                        for events in p_class.getDataBatch(3):
+                        for events in p_class.getDataBatch(10):
                             for event in events:
                                 target_event = self.fieldmap(event, p_class, p['fieldmap'])  # Map source -> tgt fields
                                 self.es_index(target_event, p)  # Index event in ES
